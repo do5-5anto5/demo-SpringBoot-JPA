@@ -10,10 +10,12 @@ import org.springframework.context.annotation.Profile;
 
 import com.quinto.demo.entities.Category;
 import com.quinto.demo.entities.Order;
+import com.quinto.demo.entities.OrderItem;
 import com.quinto.demo.entities.Product;
 import com.quinto.demo.entities.User;
 import com.quinto.demo.entities.enums.OrderStatus;
 import com.quinto.demo.repositories.CategoryRepository;
+import com.quinto.demo.repositories.OrderItemRepository;
 import com.quinto.demo.repositories.OrderRepository;
 import com.quinto.demo.repositories.ProductRepository;
 import com.quinto.demo.repositories.UserRepository;
@@ -33,6 +35,9 @@ public class TestConfig implements CommandLineRunner{
 	
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private OrderItemRepository orderItemRepository;
 	
 
 	@Override
@@ -71,6 +76,13 @@ public class TestConfig implements CommandLineRunner{
 		
 		userRepository.saveAll(Arrays.asList(user1, user2)); 
 		orderRepository.saveAll(Arrays.asList(order1, order2, order3));
+		
+		OrderItem orderItem1 = new OrderItem(order1, product1, 2, product1.getPrice()); 
+		OrderItem orderItem2 = new OrderItem(order1, product3, 1, product3.getPrice()); 
+		OrderItem orderItem3 = new OrderItem(order2, product3, 2, product3.getPrice()); 
+		OrderItem orderItem4 = new OrderItem(order3, product5, 2, product5.getPrice()); 
+
+		orderItemRepository.saveAll(Arrays.asList(orderItem1, orderItem2, orderItem3, orderItem4));
 	}
 
 }
