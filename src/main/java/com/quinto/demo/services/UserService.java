@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import com.quinto.demo.entities.User;
 import com.quinto.demo.repositories.UserRepository;
-import com.quinto.demo.services.exceptions.ResourceNotFoundException;
 import com.quinto.demo.services.exceptions.DatabaseException;
+import com.quinto.demo.services.exceptions.ResourceNotFoundException;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService {
@@ -51,9 +53,14 @@ public class UserService {
 	
 	@PostMapping
 	public User update (Long id, User obj) {
+		try {
 		User entity = repository.getReferenceById(id);
 		updateData(entity, obj);
 		return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
+		
 	}
 
 	@PostMapping
