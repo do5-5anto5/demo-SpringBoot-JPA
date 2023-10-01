@@ -5,9 +5,14 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import com.quinto.demo.entities.User;
 import com.quinto.demo.repositories.UserRepository;
+import com.quinto.demo.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class UserService {
@@ -19,25 +24,30 @@ public class UserService {
 		return repository.findAll();
 	}
 	
+	@GetMapping(value = "/{id}")
 	public User findById(Long id) {
 		Optional<User> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 	
+	@PutMapping(value = "/{id}")
 	public User insert (User obj) {
 		return repository.save(obj);
 	}
 
+	@DeleteMapping(value = "/{id}")
 	public void delete (Long id) {
 		repository.deleteById(id);
 	}
 	
+	@PostMapping
 	public User update (Long id, User obj) {
 		User entity = repository.getReferenceById(id);
 		updateData(entity, obj);
 		return repository.save(entity);
 	}
 
+	@PostMapping
 	private void updateData(User entity, User obj) {
 		entity.setName(obj.getName());		
 		entity.setEmail(obj.getEmail());
